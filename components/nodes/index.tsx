@@ -263,9 +263,9 @@ const NodeComponent: React.FC<NodeProps> = ({
     }
   }, [node.type]);
 
-  // 🔥 关键修复：从 node.data 恢复角色数据到 manager（刷新后需要）
+  // 🔥 关键修复：从 node.data 恢复实体数据到 manager（刷新后需要）
   useEffect(() => {
-    if (node.type !== NodeType.CHARACTER_NODE) return;
+    if (![NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(node.type)) return;
 
     const restoreManagerFromNodeData = async () => {
       try {
@@ -588,6 +588,8 @@ const NodeComponent: React.FC<NodeProps> = ({
         case NodeType.STORYBOARD_GENERATOR: return { icon: Clapperboard, color: 'text-indigo-400', border: 'border-indigo-500/30' };
         case NodeType.STORYBOARD_IMAGE: return { icon: LayoutGrid, color: 'text-purple-400', border: 'border-purple-500/30' };
         case NodeType.CHARACTER_NODE: return { icon: User, color: 'text-orange-400', border: 'border-orange-500/30' };
+        case NodeType.SCENE_NODE: return { icon: Box, color: 'text-sky-400', border: 'border-sky-500/30' };
+        case NodeType.ITEM_NODE: return { icon: Package, color: 'text-green-400', border: 'border-green-500/30' };
         case NodeType.DRAMA_ANALYZER: return { icon: Film, color: 'text-violet-400', border: 'border-violet-500/30' };
         default: return { icon: Type, color: 'text-slate-400', border: 'border-white/10' };
       }
@@ -598,7 +600,7 @@ const NodeComponent: React.FC<NodeProps> = ({
       if (node.height) return node.height;
       if (node.type === NodeType.STORYBOARD_GENERATOR) return STORYBOARD_NODE_HEIGHT;
       if (node.type === NodeType.STORYBOARD_IMAGE) return 600;
-      if (node.type === NodeType.CHARACTER_NODE) return CHARACTER_NODE_HEIGHT;
+      if ([NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(node.type)) return CHARACTER_NODE_HEIGHT;
       if (node.type === NodeType.DRAMA_ANALYZER) return 600;
       if (node.type === NodeType.SORA_VIDEO_GENERATOR) return 700;
       if (node.type === NodeType.SORA_VIDEO_CHILD) return 500;

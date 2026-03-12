@@ -1214,7 +1214,7 @@ export const BottomPanel: React.FC<BottomPanelContext> = (ctx) => {
          models = TEXT_MODELS.map(m => ({l: m.name, v: m.id}));
      } else if (node.type === NodeType.STORYBOARD_IMAGE) {
          models = IMAGE_MODELS.map(m => ({l: m.name, v: m.id}));
-     } else if (node.type === NodeType.CHARACTER_NODE) {
+     } else if ([NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(node.type)) {
          models = IMAGE_MODELS.map(m => ({l: m.name, v: m.id}));
      } else {
         models = IMAGE_MODELS.map(m => ({l: m.name, v: m.id}));
@@ -1341,7 +1341,7 @@ export const BottomPanel: React.FC<BottomPanelContext> = (ctx) => {
                                     <span>已连接 {node.inputs.length} 个节点</span>
                                 </div>
                                 {/* Show if character node is connected */}
-                                {nodeQuery?.hasUpstreamNode(node.id, NodeType.CHARACTER_NODE) && (
+                                {(nodeQuery?.hasUpstreamNode(node.id, NodeType.CHARACTER_NODE) || nodeQuery?.hasUpstreamNode(node.id, NodeType.SCENE_NODE) || nodeQuery?.hasUpstreamNode(node.id, NodeType.ITEM_NODE)) && (
                                     <div className="flex items-center gap-2 px-2 py-1 bg-orange-500/10 border border-orange-500/20 rounded text-[9px] text-orange-300">
                                         <User size={10} />
                                         <span>已连接角色设计，将保持角色一致性</span>
@@ -1411,7 +1411,7 @@ export const BottomPanel: React.FC<BottomPanelContext> = (ctx) => {
                             <span>生成九宫格分镜图</span>
                         </button>
                     </div>
-                ) : node.type === NodeType.CHARACTER_NODE ? (
+                ) : [NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(node.type) ? (
                     <div className="flex flex-col gap-2 p-2">
                         {/* Status / Instructions */}
                         <div className="flex items-center justify-between px-1">

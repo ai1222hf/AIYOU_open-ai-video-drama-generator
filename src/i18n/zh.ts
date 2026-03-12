@@ -15,6 +15,8 @@ export const zh = {
     scriptEpisode: '剧本分集',
     storyboardGenerator: '分镜生成',
     characterNode: '角色设计',
+    sceneNode: '场景设计',
+    itemNode: '物品设计',
   },
 
   // Actions

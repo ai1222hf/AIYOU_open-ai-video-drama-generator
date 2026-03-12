@@ -15,7 +15,9 @@ import {
   Sparkles,
   Palette,
   Grid,
-  Wand2
+  Wand2,
+  Box,
+  Package
 } from 'lucide-react';
 
 /**
@@ -43,6 +45,8 @@ export function getNodeNameCN(type: NodeType): string {
     case NodeType.STORYBOARD_VIDEO_GENERATOR: return '分镜视频生成';
     case NodeType.STORYBOARD_VIDEO_CHILD: return '分镜视频结果';
     case NodeType.CHARACTER_NODE: return '角色设计';
+    case NodeType.SCENE_NODE: return '场景设计';
+    case NodeType.ITEM_NODE: return '物品设计';
     case NodeType.DRAMA_ANALYZER: return '剧目分析';
     case NodeType.DRAMA_REFINED: return '剧目精炼';
     case NodeType.STYLE_PRESET: return '全局风格';
@@ -88,6 +92,10 @@ export function getNodeInfo(type: NodeType): { description: string; inputs: stri
       return { description: '展示分镜视频生成的单个结果', inputs: '分镜视频生成（自动生成）', outputs: '视频编辑器' };
     case NodeType.CHARACTER_NODE:
       return { description: '定义角色外观、性格等设定，保持一致性', inputs: '创意描述、剧本大纲、剧本分集、分镜生成', outputs: '分镜图设计' };
+    case NodeType.SCENE_NODE:
+      return { description: '提取并设计关键场景设定，保持场景一致性', inputs: '创意描述、剧本大纲、剧本分集、分镜生成', outputs: '分镜图设计' };
+    case NodeType.ITEM_NODE:
+      return { description: '提取并设计关键物品设定，保持道具一致性', inputs: '创意描述、剧本大纲、剧本分集、分镜生成', outputs: '分镜图设计' };
     case NodeType.DRAMA_ANALYZER:
       return { description: '分析剧目结构、节奏和情感走向', inputs: '剧本大纲、剧本分集', outputs: '剧目精炼' };
     case NodeType.DRAMA_REFINED:
@@ -119,6 +127,8 @@ export function getNodeIcon(type: NodeType) {
     [NodeType.STORYBOARD_SPLITTER]: Grid,
     [NodeType.SORA_VIDEO_GENERATOR]: Wand2,
     [NodeType.CHARACTER_NODE]: User,
+    [NodeType.SCENE_NODE]: Box,
+    [NodeType.ITEM_NODE]: Package,
     [NodeType.DRAMA_ANALYZER]: Film,
     [NodeType.DRAMA_REFINED]: Sparkles,
     [NodeType.STYLE_PRESET]: Palette,
@@ -149,6 +159,8 @@ export function getNodeColor(type: NodeType): string {
     [NodeType.SORA_VIDEO_GENERATOR]: '#10b981',  // Green color for Sora video generation
     [NodeType.SORA_VIDEO_CHILD]: '#10b981',
     [NodeType.CHARACTER_NODE]: '#f97316',
+    [NodeType.SCENE_NODE]: '#0ea5e9',
+    [NodeType.ITEM_NODE]: '#22c55e',
     [NodeType.DRAMA_ANALYZER]: '#7c3aed',
     [NodeType.DRAMA_REFINED]: '#06b6d4',
     [NodeType.STYLE_PRESET]: '#a855f7',
@@ -175,7 +187,7 @@ export function getApproxNodeHeight(node: AppNode): number {
   // 与 components/nodes/index.tsx getNodeHeight() 保持一致
   if (node.type === NodeType.STORYBOARD_GENERATOR) return STORYBOARD_NODE_HEIGHT;
   if (node.type === NodeType.STORYBOARD_IMAGE) return 600;
-  if (node.type === NodeType.CHARACTER_NODE) return CHARACTER_NODE_HEIGHT;
+  if (node.type === NodeType.CHARACTER_NODE || node.type === NodeType.SCENE_NODE || node.type === NodeType.ITEM_NODE) return CHARACTER_NODE_HEIGHT;
   if (node.type === NodeType.DRAMA_ANALYZER) return 600;
   if (node.type === NodeType.SORA_VIDEO_GENERATOR) return 700;
   if (node.type === NodeType.SORA_VIDEO_CHILD) return 500;
