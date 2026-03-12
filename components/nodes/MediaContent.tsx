@@ -1062,8 +1062,8 @@ export const MediaContent: React.FC<NodeContentContext> = (ctx) => {
           );
       }
       
-      // --- CHARACTER NODE CONTENT ---
-      if (node.type === NodeType.CHARACTER_NODE) {
+      // --- CHARACTER / SCENE / ITEM NODE CONTENT ---
+      if ([NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(node.type)) {
           const names = node.data.extractedCharacterNames || [];
           const configs = node.data.characterConfigs || {};
           const generated = node.data.generatedCharacters || [];
@@ -1075,8 +1075,8 @@ export const MediaContent: React.FC<NodeContentContext> = (ctx) => {
                       {names.length === 0 && !isWorking ? (
                           <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-2">
                               <User size={32} className="opacity-50" />
-                              <span className="text-xs">等待提取角色...</span>
-                              <span className="text-[10px]">请连接剧本节点</span>
+                              <span className="text-xs">等待提取内容...</span>
+                              <span className="text-[10px]">请连接剧本或创意节点</span>
                               <span className="text-[9px] text-slate-600 mt-2">💡 支持连接多个节点自动去重</span>
                           </div>
                       ) : (
@@ -1086,7 +1086,7 @@ export const MediaContent: React.FC<NodeContentContext> = (ctx) => {
                                   <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-2 flex items-center gap-2">
                                       <div className="flex items-center gap-1.5">
                                           <User size={12} className="text-orange-400" />
-                                          <span className="text-[10px] text-orange-300 font-bold">{names.length} 个角色</span>
+                                          <span className="text-[10px] text-orange-300 font-bold">{names.length} 个条目</span>
                                       </div>
                                       <span className="text-[9px] text-slate-400">来自 {node.inputs.length} 个输入节点</span>
                                   </div>

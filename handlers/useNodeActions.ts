@@ -1157,7 +1157,7 @@ export function useNodeActions(params: UseNodeActionsParams) {
                   }
 
                   // Find optional CHARACTER_NODE
-                  const characterNode = inputs.find(n => n?.type === NodeType.CHARACTER_NODE);
+                  const characterNode = inputs.find(n => [NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(n?.type as NodeType));
                   const characterData = characterNode?.data?.generatedCharacters || [];
 
                   // Update node with available shots
@@ -1591,7 +1591,7 @@ export function useNodeActions(params: UseNodeActionsParams) {
                   selectedFields: [] // Initialize empty selection
               });
 
-          } else if (node.type === NodeType.CHARACTER_NODE) {
+          } else if ([NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(node.type)) {
               // --- Character Node Generation Logic ---
 
 
@@ -2397,7 +2397,7 @@ export function useNodeActions(params: UseNodeActionsParams) {
               const characterReferenceImages: string[] = [];
               const characterNames: string[] = [];  // Track character names for prompt
               const characterNameMap = new Map<string, string>();  // Chinese name → English code (Character A, B, C...)
-              const characterNode = inputs.find(n => n.type === NodeType.CHARACTER_NODE);
+              const characterNode = inputs.find(n => [NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE].includes(n.type));
 
               if (characterNode?.data.generatedCharacters) {
                   const characters = characterNode.data.generatedCharacters as CharacterProfile[];

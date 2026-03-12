@@ -5,7 +5,7 @@ import {
     Plus, RotateCcw, History, MessageSquare, FolderHeart, X,
     ImageIcon, Video as VideoIcon, Film, Save, FolderPlus,
     Edit, Trash2, Box, ScanFace, Brush, Type, Workflow as WorkflowIcon,
-    Clapperboard, Mic2, Settings, BookOpen, ScrollText, User, Search, Sparkles, Palette, Bug, LayoutGrid, Grid, Wand2, FileText
+    Clapperboard, Mic2, Settings, BookOpen, ScrollText, User, Search, Sparkles, Palette, Bug, LayoutGrid, Grid, Wand2, Package
 } from 'lucide-react';
 import { NodeType, Workflow } from '../types';
 import { getNodeNameCN } from '../utils/nodeHelpers';
@@ -71,6 +71,8 @@ const getNodeIcon = (t: string) => {
         case NodeType.SORA_VIDEO_GENERATOR: return Wand2;
         case NodeType.STORYBOARD_VIDEO_GENERATOR: return Film;
         case NodeType.CHARACTER_NODE: return User;
+        case NodeType.SCENE_NODE: return Box;
+        case NodeType.ITEM_NODE: return Package;
         case NodeType.DRAMA_ANALYZER: return Search;
         case NodeType.DRAMA_REFINED: return Sparkles;
         case NodeType.STYLE_PRESET: return Palette;
@@ -305,7 +307,7 @@ export const SidebarDock: React.FC<SidebarDockProps> = ({
                     </span>
                 </div>
                 <div className="flex-1 overflow-y-auto p-2 custom-scrollbar space-y-2">
-                    {[NodeType.SCRIPT_PLANNER, NodeType.SCRIPT_EPISODE, NodeType.CHARACTER_NODE, NodeType.STORYBOARD_IMAGE, NodeType.STORYBOARD_SPLITTER, NodeType.SORA_VIDEO_GENERATOR, NodeType.STORYBOARD_VIDEO_GENERATOR, NodeType.DRAMA_ANALYZER, NodeType.VIDEO_EDITOR].map(t => {
+                    {[NodeType.SCRIPT_PLANNER, NodeType.SCRIPT_EPISODE, NodeType.CHARACTER_NODE, NodeType.SCENE_NODE, NodeType.ITEM_NODE, NodeType.STORYBOARD_IMAGE, NodeType.STORYBOARD_SPLITTER, NodeType.SORA_VIDEO_GENERATOR, NodeType.STORYBOARD_VIDEO_GENERATOR, NodeType.DRAMA_ANALYZER, NodeType.VIDEO_EDITOR].map(t => {
                         const ItemIcon = getNodeIcon(t);
                         return (
                             <button

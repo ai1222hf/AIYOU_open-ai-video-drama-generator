@@ -17,6 +17,8 @@ export const en: Translation = {
     scriptEpisode: 'Script Episode',
     storyboardGenerator: 'Storyboard',
     characterNode: 'Character Design',
+    sceneNode: 'Scene Design',
+    itemNode: 'Item Design',
   },
 
   // Actions

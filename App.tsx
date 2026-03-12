@@ -217,6 +217,8 @@ export const App = () => {
       childNodes: {id: string, startX: number, startY: number}[]
   } | null>(null);
 
+  const [isPromptManagerOpen, setIsPromptManagerOpen] = useState(false);
+
   useEffect(() => {
       nodesRef.current = nodes;
       connectionsRef.current = connections;
@@ -542,6 +544,8 @@ export const App = () => {
           case NodeType.SORA_VIDEO_GENERATOR: return 'Sora 2 视频';
           case NodeType.SORA_VIDEO_CHILD: return 'Sora 2 视频结果';
           case NodeType.CHARACTER_NODE: return t.nodes.characterNode;
+          case NodeType.SCENE_NODE: return t.nodes.sceneNode;
+          case NodeType.ITEM_NODE: return t.nodes.itemNode;
           case NodeType.DRAMA_ANALYZER: return '剧目分析';
           case NodeType.DRAMA_REFINED: return '剧目精炼';
           case NodeType.STYLE_PRESET: return '全局风格';
@@ -692,6 +696,8 @@ export const App = () => {
               case NodeType.SCRIPT_EPISODE:
               case NodeType.STORYBOARD_GENERATOR:
               case NodeType.CHARACTER_NODE:
+              case NodeType.SCENE_NODE:
+              case NodeType.ITEM_NODE:
               case NodeType.DRAMA_ANALYZER:
               case NodeType.STYLE_PRESET:
                   return getUserDefaultModel('text');
@@ -1623,6 +1629,8 @@ export const App = () => {
                   NodeType.SCRIPT_PLANNER,
                   NodeType.SCRIPT_EPISODE,
                   NodeType.CHARACTER_NODE,
+                  NodeType.SCENE_NODE,
+                  NodeType.ITEM_NODE,
                   NodeType.STYLE_PRESET,
                   NodeType.STORYBOARD_GENERATOR,
                   NodeType.STORYBOARD_IMAGE,
@@ -1835,6 +1843,24 @@ export const App = () => {
           <ModelFallbackNotification />
           <NotificationToast />
 
+          <WorkflowPromptManager
+            isOpen={isPromptManagerOpen}
+            nodes={nodes}
+            connections={connections}
+            onClose={() => setIsPromptManagerOpen(false)}
+            onApplyNodePrompt={async (nodeId, data) => {
+              handleNodeUpdate(nodeId, data);
+            }}
+            onApplyBatchPrompt={async (updates) => {
+              updates.forEach(item => {
+                handleNodeUpdate(item.nodeId, item.data);
+              });
+            }}
+            onSync={async () => {
+              await saveCurrentAsWorkflow();
+            }}
+          />
+
           <SidebarDock
               onAddNode={addNode}
               onUndo={undo}
@@ -1902,6 +1928,14 @@ export const App = () => {
               {/* 保存按钮 + 翻译按钮 - 只在进入画布后显示 */}
               {nodes.length > 0 && (
                   <>
+                      <button
+                          onClick={() => setIsPromptManagerOpen(true)}
+                          className="flex items-center gap-2 px-4 py-2 bg-[#1c1c1e]/80 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl text-slate-300 hover:text-white hover:border-white/20 transition-all hover:scale-105"
+                          title="管理工作流提示词"
+                      >
+                          <BookOpen size={16} />
+                          <span className="text-xs font-medium">提示词管理</span>
+                      </button>
                       <button
                           onClick={saveCurrentAsWorkflow}
                           className="flex items-center gap-2 px-4 py-2 bg-[#1c1c1e]/80 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl text-slate-300 hover:text-white hover:border-white/20 transition-all hover:scale-105"

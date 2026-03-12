@@ -21,6 +21,8 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
       NodeType.AUDIO_GENERATOR,
       NodeType.SCRIPT_PLANNER,
       NodeType.CHARACTER_NODE,
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE,
       NodeType.STORYBOARD_IMAGE  // 剧本分集子节点可以输出到分镜图设计
     ],
     minInputs: 0,
@@ -36,6 +38,8 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
       NodeType.IMAGE_EDITOR,
       NodeType.STORYBOARD_GENERATOR,
       NodeType.CHARACTER_NODE,
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE,
       NodeType.STYLE_PRESET  // 接入风格设定
     ],
     allowedOutputs: [
@@ -57,6 +61,8 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
       NodeType.IMAGE_EDITOR,
       NodeType.STORYBOARD_GENERATOR,
       NodeType.CHARACTER_NODE,
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE,
       NodeType.STYLE_PRESET  // 接入风格设定
     ],
     allowedOutputs: [
@@ -121,6 +127,8 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
     allowedOutputs: [
       NodeType.SCRIPT_EPISODE,
       NodeType.CHARACTER_NODE,
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE,
       NodeType.STYLE_PRESET  // 输出到风格设定
     ],
     minInputs: 0,
@@ -136,6 +144,8 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
     allowedOutputs: [
       NodeType.STORYBOARD_GENERATOR,
       NodeType.CHARACTER_NODE,
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE,
       NodeType.IMAGE_GENERATOR
     ],
     minInputs: 1,
@@ -176,12 +186,52 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
     description: '提取角色并生成角色档案（支持多输入去重和风格设定参考）'
   },
 
+
+
+  // 场景设计 - 接收剧本输入,输出到图像和视频
+  [NodeType.SCENE_NODE]: {
+    allowedInputs: [
+      NodeType.SCRIPT_PLANNER,
+      NodeType.SCRIPT_EPISODE,
+      NodeType.PROMPT_INPUT,
+      NodeType.STYLE_PRESET
+    ],
+    allowedOutputs: [
+      NodeType.IMAGE_GENERATOR,
+      NodeType.VIDEO_GENERATOR,
+      NodeType.STORYBOARD_IMAGE
+    ],
+    minInputs: 1,
+    maxInputs: 10,
+    description: '提取关键场景并生成场景设定（支持多输入去重和风格设定参考）'
+  },
+
+  // 物品设计 - 接收剧本输入,输出到图像和视频
+  [NodeType.ITEM_NODE]: {
+    allowedInputs: [
+      NodeType.SCRIPT_PLANNER,
+      NodeType.SCRIPT_EPISODE,
+      NodeType.PROMPT_INPUT,
+      NodeType.STYLE_PRESET
+    ],
+    allowedOutputs: [
+      NodeType.IMAGE_GENERATOR,
+      NodeType.VIDEO_GENERATOR,
+      NodeType.STORYBOARD_IMAGE
+    ],
+    minInputs: 1,
+    maxInputs: 10,
+    description: '提取关键物品并生成物品设定（支持多输入去重和风格设定参考）'
+  },
+
   // 分镜图设计 - 接收剧本和角色输入,生成九宫格分镜图
   [NodeType.STORYBOARD_IMAGE]: {
     allowedInputs: [
       NodeType.PROMPT_INPUT,
       NodeType.SCRIPT_EPISODE,
       NodeType.CHARACTER_NODE,  // Accept character design for consistency
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE,
       NodeType.STYLE_PRESET
     ],
     allowedOutputs: [
@@ -247,7 +297,9 @@ export const NODE_DEPENDENCY_RULES: Record<NodeType, {
     allowedOutputs: [
       NodeType.IMAGE_GENERATOR,
       NodeType.VIDEO_GENERATOR,
-      NodeType.CHARACTER_NODE  // NEW: Output to character design
+      NodeType.CHARACTER_NODE,
+      NodeType.SCENE_NODE,
+      NodeType.ITEM_NODE  // Output to design nodes
     ],
     minInputs: 0,
     maxInputs: 10,
@@ -546,6 +598,8 @@ export function canExecuteNode(
       break;
 
     case NodeType.CHARACTER_NODE:
+    case NodeType.SCENE_NODE:
+    case NodeType.ITEM_NODE:
       if (inputCount === 0) {
         return {
           valid: false,
@@ -602,6 +656,8 @@ function getNodeDisplayName(type: NodeType): string {
     [NodeType.STORYBOARD_VIDEO_GENERATOR]: '分镜视频生成',
     [NodeType.STORYBOARD_VIDEO_CHILD]: '分镜视频结果',
     [NodeType.CHARACTER_NODE]: '角色设计',
+    [NodeType.SCENE_NODE]: '场景设计',
+    [NodeType.ITEM_NODE]: '物品设计',
     [NodeType.DRAMA_ANALYZER]: '剧目分析',
     [NodeType.DRAMA_REFINED]: '剧目精炼',
     [NodeType.STYLE_PRESET]: '全局风格'
