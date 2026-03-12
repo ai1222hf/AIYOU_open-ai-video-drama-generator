@@ -32,6 +32,10 @@ interface SidebarDockProps {
     isDebugOpen?: boolean;
     onToggleDebug?: () => void;
 
+    // Prompt Manager
+    isPromptManagerOpen?: boolean;
+    onTogglePromptManager?: () => void;
+
     // History Props
     assetHistory: any[];
     onHistoryItemClick: (item: any) => void;
@@ -92,6 +96,8 @@ export const SidebarDock: React.FC<SidebarDockProps> = ({
     onToggleCharacterLibrary,
     isDebugOpen,
     onToggleDebug,
+    isPromptManagerOpen,
+    onTogglePromptManager,
     assetHistory,
     onHistoryItemClick,
     onDeleteAsset,
@@ -339,6 +345,7 @@ export const SidebarDock: React.FC<SidebarDockProps> = ({
                     // { id: 'sonic_studio', icon: Mic2, action: onToggleSonicStudio, active: isSonicStudioOpen, tooltip: '音频中心' },  // 隐藏音频中心
                     { id: 'character_library', icon: User, action: onToggleCharacterLibrary, active: isCharacterLibraryOpen, tooltip: '角色库' },
                     { id: 'history', icon: History },
+                    { id: 'prompt_manager', icon: FileText, action: onTogglePromptManager, active: isPromptManagerOpen, tooltip: '提示词管理' },
                     // { id: 'chat', icon: MessageSquare, action: onToggleChat, active: isChatOpen },  // 隐藏AI创意助手
                     { id: 'debug', icon: Bug, action: onToggleDebug, active: isDebugOpen, tooltip: 'API日志调试' },
                     { id: 'undo', icon: RotateCcw, action: onUndo },
@@ -352,9 +359,9 @@ export const SidebarDock: React.FC<SidebarDockProps> = ({
                             <item.icon size={20} strokeWidth={2} />
                         </button>
                         {/* Tooltip for Sidebar Icons */}
-                        {(item.id === 'character_library' || item.id === 'debug') && (
+                        {(item.id === 'character_library' || item.id === 'debug' || item.id === 'prompt_manager') && (
                             <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 px-2 py-1 bg-black/80 backdrop-blur-md rounded border border-white/10 text-[10px] text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                                {item.tooltip || (item.id === 'debug' ? 'API日志调试' : '角色库')}
+                                {item.tooltip || (item.id === 'debug' ? 'API日志调试' : item.id === 'prompt_manager' ? '提示词管理' : '角色库')}
                             </div>
                         )}
                     </div>
