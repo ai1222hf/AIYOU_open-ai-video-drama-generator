@@ -60,6 +60,7 @@ import {
     Minus, FolderHeart, Unplug, Sparkles, ChevronLeft, ChevronRight, Scan, Music, Mic2, Loader2, ScrollText, Clapperboard, User, BookOpen, Languages, HardDrive, Save
 } from 'lucide-react';
 import { ExpandedView } from './components/ExpandedView';
+import { WorkflowPromptManager } from './components/WorkflowPromptManager';
 import type { InputAsset } from './components/nodes/types';
 
 // ... (Constants, Helpers, ExpandedView UNCHANGED) ...
@@ -204,6 +205,8 @@ export const App = () => {
   } | null>(null);
 
   const selectionRectRef = useRef<any>(null);
+
+  const [isPromptManagerOpen, setIsPromptManagerOpen] = useState(false);
 
   const dragGroupRef = useRef<{
       id: string, 
@@ -1038,6 +1041,17 @@ export const App = () => {
       }));
   }, [handleAssetGenerated]);
 
+
+  const applyPromptToNode = useCallback(async (nodeId: string, prompt: string) => {
+      handleNodeUpdate(nodeId, { prompt });
+  }, [handleNodeUpdate]);
+
+  const applyPromptBatch = useCallback(async (updates: Array<{ nodeId: string; prompt: string }>) => {
+      updates.forEach((update) => {
+          handleNodeUpdate(update.nodeId, { prompt: update.prompt });
+      });
+  }, [handleNodeUpdate]);
+
   const handleReplaceFile = useCallback((e: React.ChangeEvent<HTMLInputElement>, type: 'image' | 'video') => {
       const file = e.target.files?.[0];
       const targetId = replacementTargetRef.current;
@@ -1834,6 +1848,8 @@ export const App = () => {
               onToggleCharacterLibrary={() => setIsCharacterLibraryOpen(!isCharacterLibraryOpen)}
               isDebugOpen={isDebugOpen}
               onToggleDebug={() => setIsDebugOpen(!isDebugOpen)}
+              isPromptManagerOpen={isPromptManagerOpen}
+              onTogglePromptManager={() => setIsPromptManagerOpen(!isPromptManagerOpen)}
               assetHistory={assetHistory}
               onHistoryItemClick={(item) => { const type = item.type.includes('image') ? NodeType.IMAGE_GENERATOR : NodeType.VIDEO_GENERATOR; const data = item.type === 'image' ? { image: item.src } : { videoUri: item.src }; addNode(type, undefined, undefined, data); }}
               onDeleteAsset={(id) => setAssetHistory(prev => prev.filter(a => a.id !== id))}
@@ -1845,6 +1861,17 @@ export const App = () => {
               onDeleteWorkflow={deleteWorkflow}
               onRenameWorkflow={renameWorkflow}
               onOpenSettings={() => setIsSettingsOpen(true)}
+          />
+
+
+          <WorkflowPromptManager
+            isOpen={isPromptManagerOpen}
+            nodes={nodes}
+            connections={connections}
+            onClose={() => setIsPromptManagerOpen(false)}
+            onApplyPrompt={applyPromptToNode}
+            onApplyBatch={applyPromptBatch}
+            onPersist={saveCurrentAsWorkflow}
           />
 
           <AssistantPanel isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
